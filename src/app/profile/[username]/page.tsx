@@ -1,14 +1,11 @@
 import {getProfileByUsername, getUserLikedPosts, getUserPosts, isFollowing} from "@/actions/profile.action";
 import {notFound} from "next/navigation";
 import ProfilePageClient from "./ProfilePageClient";
+import {useRouter} from "next/router";
 
-// Define the correct props type for Next.js App Router
-interface Props {
-    params: { username: string }
-}
-
-export async function generateMetadata({ params }: Props) {
-    const user = await getProfileByUsername(params.username);
+export async function generateMetadata() {
+    const router = useRouter();
+    const user = await getProfileByUsername(router.query.username as string);
 
     if (!user) { // @ts-ignore
         return;
@@ -20,8 +17,9 @@ export async function generateMetadata({ params }: Props) {
     }
 }
 
-async function ProfilePageServer({ params }: Props) {
-    const user = await getProfileByUsername(params.username);
+async function ProfilePageServer() {
+    const router = useRouter();
+    const user = await getProfileByUsername(router.query.username as string);
 
     if (!user) notFound();
 
