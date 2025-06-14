@@ -1,11 +1,9 @@
 import {getProfileByUsername, getUserLikedPosts, getUserPosts, isFollowing} from "@/actions/profile.action";
 import {notFound} from "next/navigation";
 import ProfilePageClient from "./ProfilePageClient";
-import {useRouter} from "next/router";
 
-export async function generateMetadata() {
-    const router = useRouter();
-    const user = await getProfileByUsername(router.query.username as string);
+export async function generateMetadata( { params }: any) {
+    const user = await getProfileByUsername(params.username.toString());
 
     if (!user) { // @ts-ignore
         return;
@@ -17,9 +15,8 @@ export async function generateMetadata() {
     }
 }
 
-async function ProfilePageServer() {
-    const router = useRouter();
-    const user = await getProfileByUsername(router.query.username as string);
+async function ProfilePageServer( { params }: any) {
+    const user = await getProfileByUsername(params.username.toString());
 
     if (!user) notFound();
 
